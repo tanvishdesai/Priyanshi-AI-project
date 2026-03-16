@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A* Pathfinding Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>A* Pathfinding Visualizer</h1>
+            <p>Interactive intelligent pathfinding algorithm demonstration</p>
+        </header>
+
+        <div class="controls-panel">
+            <button id="btn-start" class="btn primary">Visualize A*</button>
+            <button id="btn-clear-path" class="btn secondary">Clear Path</button>
+            <button id="btn-clear-board" class="btn secondary">Clear Board</button>
+            <button id="btn-generate-maze" class="btn accent">Generate Maze</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-node node-start"></div>
+                <span>Start</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-node node-end"></div>
+                <span>Target</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-node node-wall"></div>
+                <span>Wall</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-node node-unvisited"></div>
+                <span>Unvisited</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-node node-visited"></div>
+                <span>Visited</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-node node-path"></div>
+                <span>Shortest Path</span>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div id="grid" class="grid"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

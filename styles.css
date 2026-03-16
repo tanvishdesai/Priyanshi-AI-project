@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+    --bg-color: #0d1117;
+    --panel-bg: rgba(22, 27, 34, 0.7);
+    --border-color: #30363d;
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    
+    --node-size: 25px;
+    --node-gap: 1px;
+    
+    /* Node Colors */
+    --color-unvisited: #161b22;
+    --color-wall: #484f58;
+    --color-start: #3fb950;
+    --color-end: #f85149;
+    --color-visited: #58a6ff;
+    --color-visited-light: rgba(88, 166, 255, 0.2);
+    --color-path: #d2a8ff;
+    
+    /* Interactive */
+    --color-btn-primary: #238636;
+    --color-btn-primary-hover: #2ea043;
+    --color-btn-secondary: #21262d;
+    --color-btn-secondary-hover: #30363d;
+    --color-btn-accent: #1f6feb;
+    --color-btn-accent-hover: #388bfd;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.app-container {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--color-path), var(--color-visited));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Controls panel */
+.controls-panel {
+    display: flex;
+    gap: 1rem;
+    background: var(--panel-bg);
+    padding: 1rem 2rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+}
+
+.btn.primary { background-color: var(--color-btn-primary); }
+.btn.primary:hover { background-color: var(--color-btn-primary-hover); }
+
+.btn.secondary { 
+    background-color: var(--color-btn-secondary); 
+    border: 1px solid var(--border-color);
+}
+.btn.secondary:hover { background-color: var(--color-btn-secondary-hover); }
+
+.btn.accent { background-color: var(--color-btn-accent); }
+.btn.accent:hover { background-color: var(--color-btn-accent-hover); }
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Legend */
+.legend {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-node {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+/* Grid layout */
+.grid-container {
+    background: var(--panel-bg);
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.grid {
+    display: grid;
+    gap: var(--node-gap);
+    /* Columns and rows will be set dynamically via JS */
+}
+
+/* Nodes */
+.node {
+    width: var(--node-size);
+    height: var(--node-size);
+    background-color: var(--color-unvisited);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.2s, transform 0.1s;
+    user-select: none; /* Prevent selection while dragging */
+}
+
+.node:hover {
+    transform: scale(1.1);
+    z-index: 10;
+    border-color: rgba(255,255,255,0.2);
+}
+
+.node-start {
+    background-color: var(--color-start);
+    border-color: var(--color-start);
+    border-radius: 5px;
+    animation: pulse 2s infinite;
+}
+
+.node-end {
+    background-color: var(--color-end);
+    border-color: var(--color-end);
+    border-radius: 5px;
+    animation: pulse 2s infinite;
+}
+
+.node-wall {
+    background-color: var(--color-wall);
+    border-color: var(--color-wall);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Animations that will be used later during finding */
+.node-visited {
+    animation: visitedAnimation 1.5s ease-out forwards;
+}
+
+.node-path {
+    animation: pathAnimation 0.5s ease-out forwards;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255, 0.4); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255,255,255, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255, 0); }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes visitedAnimation {
+    0% {
+        transform: scale(0.3);
+        background-color: rgba(0, 190, 218, 0.75);
+        border-radius: 100%;
+    }
+    50% {
+        background-color: rgba(17, 104, 217, 0.75);
+    }
+    75% {
+        transform: scale(1.2);
+        background-color: rgba(0, 217, 159, 0.75);
+    }
+    100% {
+        transform: scale(1);
+        background-color: var(--color-visited);
+        border-color: var(--color-visited-light);
+    }
+}
+
+@keyframes pathAnimation {
+    0% {
+        transform: scale(0.6);
+        background-color: #fff;
+    }
+    50% {
+        transform: scale(1.2);
+        background-color: var(--color-path);
+    }
+    100% {
+        transform: scale(1);
+        background-color: var(--color-path);
+        border-color: var(--color-path);
+        box-shadow: 0 0 10px var(--color-path);
+    }
+}
